@@ -1,0 +1,27 @@
+{
+  "_id": "5c0aa907c3a368252004c4f8",
+  "air_date": "2022-09-01",
+  "episodes": [
+    {
+      "air_date": "2022-09-01",
+      "episode_number": 1,
+      "id": 1865375,
+      "name": "A Shadow of the Past",
+      "overview": "Galadriel is disturbed by signs of an ancient evil's return; Arondir makes an unsettling discovery; Elrond is presented with an intriguing new venture; Nori breaks the Harfoot community's most deeply-held rule.",
+      "production_code": "LTUM 101",
+      "runtime": 65,
+      "season_number": 1,
+      "show_id": 84773,
+      "still_path": "/e40fPU0TDJaZ5bUGb2ryr2b9XqT.jpg",
+      "vote_average": 6.862,
+      "vote_count": 94,
+      "crew": [],
+      "guest_stars": []
+    }
+  ],
+  "name": "Season 1",
+  "overview": "",
+  "id": 114041,
+  "poster_path": "/umRaUV2ku9MMtEunMQt3uCO1OgE.jpg",
+  "season_number": 1
+}
