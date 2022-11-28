@@ -1,135 +1,91 @@
+import 'package:core/core.dart';
 import 'package:get_it/get_it.dart';
-import 'package:http/http.dart' as http;
-
-import 'data/datasources/db/database_helper.dart';
-import 'data/datasources/movie_local_data_source.dart';
-import 'data/datasources/movie_remote_data_source.dart';
-import 'data/datasources/tv_series_local_data_source.dart';
-import 'data/datasources/tv_series_remote_data_source.dart';
-import 'data/repositories/movie_repository_impl.dart';
-import 'data/repositories/tv_series_repository_impl.dart';
-import 'domain/repositories/movie_repository.dart';
-import 'domain/repositories/tv_series_repository.dart';
-import 'domain/usecases/get_episode_tv_series.dart';
-import 'domain/usecases/get_movie_detail.dart';
-import 'domain/usecases/get_movie_recommendations.dart';
-import 'domain/usecases/get_now_playing_movies.dart';
-import 'domain/usecases/get_now_playing_tv_series.dart';
-import 'domain/usecases/get_popular_movies.dart';
-import 'domain/usecases/get_popular_tv_series.dart';
-import 'domain/usecases/get_top_rated_movies.dart';
-import 'domain/usecases/get_top_rated_tv_series.dart';
-import 'domain/usecases/get_tv_series_detail.dart';
-import 'domain/usecases/get_tv_series_recommendations.dart';
-import 'domain/usecases/get_watchlist_movies.dart';
-import 'domain/usecases/get_watchlist_status.dart';
-import 'domain/usecases/get_watchlist_tv_series.dart';
-import 'domain/usecases/get_watchlist_tv_series_status.dart';
-import 'domain/usecases/remove_watchlist.dart';
-import 'domain/usecases/remove_watchlist_tv_series.dart';
-import 'domain/usecases/save_watchlist.dart';
-import 'domain/usecases/save_watchlist_tv_series.dart';
-import 'domain/usecases/search_movies.dart';
-import 'domain/usecases/search_tv_series.dart';
-import 'presentation/provider/episode_tv_series.dart';
-import 'presentation/provider/movie_detail_notifier.dart';
-import 'presentation/provider/movie_list_notifier.dart';
-import 'presentation/provider/movie_search_notifier.dart';
-import 'presentation/provider/now_playing_tv_series.dart';
-import 'presentation/provider/popular_movies_notifier.dart';
-import 'presentation/provider/popular_tv_series_notifier.dart';
-import 'presentation/provider/top_rated_movies_notifier.dart';
-import 'presentation/provider/top_rated_tv_series_notifier.dart';
-import 'presentation/provider/tv_series_detail_notifier.dart';
-import 'presentation/provider/tv_series_list_notifier.dart';
-import 'presentation/provider/tv_series_search_notifier.dart';
-import 'presentation/provider/watchlist_movie_notifier.dart';
-import 'presentation/provider/watchlist_tv_series_notifier.dart';
+import 'package:movies/movies.dart';
+import 'package:tv_series/tv_series.dart';
 
 final locator = GetIt.instance;
 
 void init() {
-  // provider
+  // bloc
   locator.registerFactory(
-    () => MovieListNotifier(
-      getNowPlayingMovies: locator(),
-      getPopularMovies: locator(),
-      getTopRatedMovies: locator(),
-    ),
-  );
-  locator.registerFactory(
-    () => TvSeriesListNotifier(
-      getNowPlayingTvSeries: locator(),
-      getPopularTvSeries: locator(),
-      getTopRatedTvSeries: locator(),
-    ),
-  );
-  locator.registerFactory(
-    () => MovieDetailNotifier(
-      getMovieDetail: locator(),
-      getMovieRecommendations: locator(),
-      getWatchListStatus: locator(),
-      saveWatchlist: locator(),
-      removeWatchlist: locator(),
-    ),
-  );
-  locator.registerFactory(
-    () => TvSeriesDetailNotifier(
-      getTvSeriesDetail: locator(),
-      getTvSeriesRecommendations: locator(),
-      getWatchListStatus: locator(),
-      saveWatchlist: locator(),
-      removeWatchlist: locator(),
-    ),
-  );
-  locator.registerFactory(
-    () => MovieSearchNotifier(
-      searchMovies: locator(),
-    ),
-  );
-  locator.registerFactory(
-    () => TvSeriesSearchNotifier(
-      searchTvSeries: locator(),
-    ),
-  );
-  locator.registerFactory(
-    () => PopularMoviesNotifier(
+    () => NowPlayingCubit(
       locator(),
     ),
   );
   locator.registerFactory(
-    () => PopularTvSeriesNotifier(
+    () => PopularCubit(
       locator(),
     ),
   );
   locator.registerFactory(
-    () => TopRatedMoviesNotifier(
-      getTopRatedMovies: locator(),
+    () => TopRatedCubit(
+      locator(),
     ),
   );
   locator.registerFactory(
-    () => TopRatedTvSeriesNotifier(
-      getTopRatedTvSeries: locator(),
+    () => DetailMovieCubit(
+      locator(),
     ),
   );
   locator.registerFactory(
-    () => NowPlayingTvSeriesNotifier(
-      getNowPlayingTvSeries: locator(),
+    () => RecommendationMovieCubit(
+      locator(),
     ),
   );
   locator.registerFactory(
-    () => EpisodeTvSeriesNotifier(
-      getEpisodeTvSeries: locator(),
+    () => SearchMovieCubit(
+      locator(),
     ),
   );
   locator.registerFactory(
-    () => WatchlistMovieNotifier(
-      getWatchlistMovies: locator(),
+    () => WatchlistMovieCubit(
+      locator(),
+      locator(),
+      locator(),
+      locator(),
     ),
   );
   locator.registerFactory(
-    () => WatchlistTvSeriesNotifier(
-      getWatchlistTvSeries: locator(),
+    () => NowPlayingTvSeriesCubit(
+      locator(),
+    ),
+  );
+  locator.registerFactory(
+    () => PopularTvSeriesCubit(
+      locator(),
+    ),
+  );
+  locator.registerFactory(
+    () => TopRatedTvSeriesCubit(
+      locator(),
+    ),
+  );
+  locator.registerFactory(
+    () => DetailTvSeriesCubit(
+      locator(),
+    ),
+  );
+  locator.registerFactory(
+    () => RecommendationTvSeriesCubit(
+      locator(),
+    ),
+  );
+  locator.registerFactory(
+    () => SearchTvSeriesCubit(
+      locator(),
+    ),
+  );
+  locator.registerFactory(
+    () => WatchlistTvSeriesCubit(
+      locator(),
+      locator(),
+      locator(),
+      locator(),
+    ),
+  );
+  locator.registerFactory(
+    () => EpisodeTvSeriesCubit(
+      locator(),
     ),
   );
 
@@ -184,5 +140,5 @@ void init() {
   locator.registerLazySingleton<DatabaseHelper>(() => DatabaseHelper());
 
   // external
-  locator.registerLazySingleton(() => http.Client());
+  locator.registerLazySingleton(() => HttpSSLPinning.client);
 }
